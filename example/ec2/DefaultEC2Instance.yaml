@@ -1,0 +1,67 @@
+#
+# Derived from: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/deploying.applications.html
+#
+main:
+    AWSTemplateFormatVersion: "2010-09-09"
+
+    Description: >
+      AWS CloudFormation Sample Template EC2InstanceWithSecurityGroupSample: Create an Amazon
+      EC2 instance running the Amazon Linux AMI. The AMI is chosen based on the region in which
+      the stack is run. This example creates an EC2 security group for the instance to give you
+      SSH access. **WARNING** This template creates an Amazon EC2 instance. You will be billed
+      for the AWS resources used if you create a stack from this template.
+
+    Parameters: !include Defaults.StandardParameters
+
+    Mappings:
+        AWSInstanceType2Arch: !include Defaults.Mappings.AWSInstanceType2Arch
+
+        AWSRegionArch2AMI: !include Defaults.Mappings.AWSRegionArch2AMI
+
+    Resources:
+        EC2Instance:
+            Type: AWS::EC2::Instance
+            Properties:
+                InstanceType:
+                    Ref: InstanceType
+                SecurityGroups:
+                    - Ref: InstanceSecurityGroup
+                KeyName:
+                    Ref: KeyName
+                ImageId:
+                    "Fn::FindInMap":
+                        - AWSRegionArch2AMI
+                        - Ref: AWS::Region
+                        - "Fn::FindInMap":
+                            - AWSInstanceType2Arch
+                            - Ref: InstanceType
+                            - Arch
+
+        InstanceSecurityGroup:
+            Type: AWS::EC2::SecurityGroup
+            Properties:
+                GroupDescription: Enable SSH access via port 22
+                SecurityGroupIngress:
+                    - IpProtocol: tcp
+                      FromPort: 22
+                      ToPort: 22
+                      CidrIp:
+                          Ref: SSHAddress
+
+    Outputs:
+        InstanceId:
+            Description: InstanceId of the newly created EC2 instance
+            Value:
+              Ref: EC2Instance
+        AZ:
+            Description: Availability Zone of the newly created EC2 instance
+            Value:
+                Fn::GetAtt: [EC2Instance, AvailabilityZone]
+        PublicDNS:
+            Description: Public DNSName of the newly created EC2 instance
+            Value:
+                Fn::GetAtt: [EC2Instance, PublicDnsName]
+        PublicIP:
+            Description: Public IP address of the newly created EC2 instance
+            Value:
+                Fn::GetAtt: [EC2Instance, PublicIp]

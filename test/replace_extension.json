@@ -1,0 +1,124 @@
+[
+{}
+,
+{
+    "firstLevel1": {
+        "secondLevel2": "value2"
+    }
+}
+,
+{
+    "firstLevel1": {
+        "secondLevel2": "value2"
+    }
+}
+,
+{
+    "firstLevel3": {
+        "secondLevel2": "value1",
+        "secondLevel1": "value1"
+    },
+    "firstLevel2": {
+        "secondLevel2": "value1",
+        "secondLevel1": "value1"
+    },
+    "firstLevel1": {
+        "secondLevel3": "value3"
+    }
+}
+,
+{
+    "firstLevel3": {
+        "secondLevel2": "value1",
+        "secondLevel1": "value1"
+    },
+    "firstLevel2": {
+        "secondLevel3": "value3"
+    },
+    "firstLevel1": {
+        "secondLevel2": "value1",
+        "secondLevel1": "value1"
+    }
+}
+,
+{
+    "firstLevel3": {
+        "secondLevel3": "value3"
+    },
+    "firstLevel2": {
+        "secondLevel2": "value1",
+        "secondLevel1": "value1"
+    },
+    "firstLevel1": {
+        "secondLevel2": "value1",
+        "secondLevel1": "value1"
+    }
+}
+,
+{
+    "firstLevel1": {
+        "secondLevel2": {
+            "thirdLevel1": "value1"
+        },
+        "secondLevel3": {
+            "thirdLevel1": "value1"
+        },
+        "secondLevel1": {
+            "thirdLevel2": "value2"
+        }
+    }
+}
+,
+{
+    "firstLevel1": {
+        "secondLevel2": {
+            "thirdLevel2": "value2"
+        },
+        "secondLevel3": {
+            "thirdLevel1": "value1"
+        },
+        "secondLevel1": {
+            "thirdLevel1": "value1"
+        }
+    }
+}
+,
+{
+    "firstLevel1": {
+        "secondLevel2": {
+            "thirdLevel1": "value1"
+        },
+        "secondLevel3": {
+            "thirdLevel2": "value2"
+        },
+        "secondLevel1": {
+            "thirdLevel1": "value1"
+        }
+    }
+}
+,
+{
+    "firstLevel3": {
+        "secondLevel3": "value3"
+    },
+    "firstLevel2": {
+        "secondLevel2": "value1",
+        "secondLevel1": "value1"
+    },
+    "firstLevel1": {
+        "secondLevel3": "value3"
+    }
+}
+,
+{
+    "firstLevel3": {
+        "secondLevel3": "value3"
+    },
+    "firstLevel2": {
+        "secondLevel2": "value3"
+    },
+    "firstLevel1": {
+        "secondLevel3": "value3"
+    }
+}
+]

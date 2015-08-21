@@ -1,0 +1,20 @@
+---
+# Root node is a param
+main: !param p1
+---
+# Removing the only complex root node
+main:
+    top: !param p1
+---
+# Multiple params
+main:
+    top: !param p1
+    bottom: !param p2
+---
+# Param with default
+main:
+    top: !param p1 "defaultValue"
+---
+# Param with default
+main:
+    top: !param p3 "defaultValue"

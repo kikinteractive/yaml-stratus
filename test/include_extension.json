@@ -1,0 +1,90 @@
+[
+{
+    "include_dirs": ["test"]
+}
+,
+{
+    "level1": {
+        "level2": {
+            "level3": {
+                "level4": {
+                    "level5": "val"
+                }
+            }
+        }
+    },
+    "level1_1": {
+        "level2": "val"
+    }
+}
+,
+{
+    "top": {
+        "level1": {
+            "level2": {
+                "level3": {
+                    "level4": {
+                        "level5": "val"
+                    }
+                }
+            }
+        },
+        "level1_1": {
+            "level2": "val"
+        }
+    }
+}
+,
+{
+    "top": {
+        "level2": {
+            "level3": {
+                "level4": {
+                    "level5": "val"
+                }
+            }
+        }
+    }
+}
+,
+{
+    "top": {
+        "level2": "val"
+    }
+}
+,
+{
+    "top": "val"
+}
+,
+{
+    "top": {
+        "level1": {
+            "level2": {
+                "level3": {
+                    "level4": {
+                        "level5": "val"
+                    }
+                }
+            }
+        },
+        "level1_1": {
+            "level2": "val"
+        }
+    },
+    "bottom": {
+        "level1": {
+            "level2": {
+                "level3": {
+                    "level4": {
+                        "level5": "val"
+                    }
+                }
+            }
+        },
+        "level1_1": {
+            "level2": "val"
+        }
+    }
+}
+]

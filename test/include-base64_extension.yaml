@@ -1,0 +1,19 @@
+---
+# Include
+main: !include-base64 test1.yaml
+---
+# Include where suffix understood
+main: !include-base64 test1
+---
+# Include in sub element
+main:
+    top: !include-base64 test1
+---
+# Include empty
+main:
+    top: !include-base64 empty.txt
+---
+# multiple include
+main:
+    top: !include-base64 test1
+    bottom: !include-base64 test1

@@ -1,0 +1,55 @@
+#
+# Derived from: http://docs.aws.amazon.com/datapipeline/latest/DeveloperGuide/dp-custom-templates.html
+#
+
+define: &inputBucket !param inputBucket
+define: &outputBucket !param outputBucket
+define: &instanceType !param instanceType "m1.small"
+define: &cmd !param cmd
+
+main:
+  objects:
+    - id: ShellCommandActivityObj
+      input:
+        ref: S3InputLocation
+      name: ShellCommandActivityObj
+      runsOn:
+        ref: EC2ResourceObj
+      command: *cmd
+      output:
+        ref: S3OutputLocation
+      type: ShellCommandActivity
+      stage: "true"
+
+    - id: Default
+      scheduleType: CRON
+      failureAndRerunMode: CASCADE
+      schedule:
+        ref: Schedule_15mins
+      name: Default
+      role: DataPipelineDefaultRole
+      resourceRole: DataPipelineDefaultResourceRole
+
+    - id: S3InputLocation
+      name: S3InputLocation
+      directoryPath: *inputBucket
+      type: S3DataNode
+
+    - id: S3OutputLocation
+      name: S3OutputLocation
+      my_outputBucket: *outputBucket
+      directoryPath: "#{my_outputBucket}/#{format(@scheduledStartTime, 'YYYY-MM-dd-HH-mm-ss')}"
+      type: S3DataNode
+
+    - id: Schedule_15mins
+      occurrences: "4"
+      name: Every 15 minutes
+      startAt: FIRST_ACTIVATION_DATE_TIME
+      type: Schedule
+      period: 15 Minutes
+
+    - id: EC2ResourceObj
+      terminateAfter: 20 Minutes
+      name: EC2ResourceObj
+      instanceType: *instanceType
+      type: Ec2Resource

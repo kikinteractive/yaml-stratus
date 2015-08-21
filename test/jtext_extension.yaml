@@ -1,0 +1,43 @@
+---
+# Join text at root
+main: !jtext |
+    hello !{Ref: Name!}! How are you?
+
+---
+# Join text down one level
+main:
+    say: !jtext |
+        hello !{Ref: Name!}! How are you?
+
+---
+# Multiple elements
+main:
+    say: !jtext |
+        Year: !{Ref: Year!}; Month: !{Ref: Month!}
+
+    sayAgain: !jtext |
+        Hour: !{Ref: hour!}; Minute: !{Ref: minute!}
+
+---
+# Adjacent elements
+main:
+    say: !jtext |
+        Hello !{Ref: FirstName!} !{Ref: LastName!}!?
+
+---
+# Singleton
+main:
+    say: !jtext |
+        !{Ref: FirstName!}
+
+---
+# Starting
+main:
+    say: !jtext |
+        !{Ref: FirstName!} says hello
+
+---
+# Trailing
+main:
+    say: !jtext |
+        Hello !{Ref: FirstName!}

@@ -1,0 +1,125 @@
+[
+{
+}
+,
+{
+    "Fn::Join": [
+        "",
+        [
+            "hello ",
+            {
+                "Ref": "Name"
+            },
+            "! How are you?\n"
+        ]
+    ]
+},
+{
+    "say": {
+        "Fn::Join": [
+            "",
+            [
+                "hello ",
+                {
+                    "Ref": "Name"
+                },
+                "! How are you?\n"
+            ]
+        ]
+    }
+},
+{
+    "say": {
+        "Fn::Join": [
+            "",
+            [
+                "Year: ",
+                {
+                    "Ref": "Year"
+                },
+                "; Month: ",
+                {
+                    "Ref": "Month"
+                },
+                "\n"
+            ]
+        ]
+    },
+    "sayAgain": {
+        "Fn::Join": [
+            "",
+            [
+                "Hour: ",
+                {
+                    "Ref": "hour"
+                },
+                "; Minute: ",
+                {
+                    "Ref": "minute"
+                },
+                "\n"
+            ]
+        ]
+    }
+},
+{
+    "say": {
+        "Fn::Join": [
+            "",
+            [
+                "Hello ",
+                {
+                    "Ref": "FirstName"
+                },
+                " ",
+                {
+                    "Ref": "LastName"
+                },
+                "!?\n"
+            ]
+        ]
+    }
+},
+{
+    "say": {
+        "Fn::Join": [
+            "",
+            [
+                "",
+                {
+                    "Ref": "FirstName"
+                },
+                "\n"
+            ]
+        ]
+    }
+},
+{
+    "say": {
+        "Fn::Join": [
+            "",
+            [
+                "",
+                {
+                    "Ref": "FirstName"
+                },
+                " says hello\n"
+            ]
+        ]
+    }
+},
+{
+    "say": {
+        "Fn::Join": [
+            "",
+            [
+                "Hello ",
+                {
+                    "Ref": "FirstName"
+                },
+                "\n"
+            ]
+        ]
+    }
+}
+]

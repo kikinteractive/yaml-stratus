@@ -1,0 +1,24 @@
+---
+# Include root node
+main: !include test1
+---
+# Include
+main:
+    top: !include test1
+---
+# Include down one level
+main:
+    top: !include test1.level1
+---
+# Include down one level
+main:
+    top: !include test1.level1_1
+---
+# Include down many levels
+main:
+    top: !include test1.level1.level2.level3.level4.level5
+---
+# multiple imclude
+main:
+    top: !include test1
+    bottom: !include test1

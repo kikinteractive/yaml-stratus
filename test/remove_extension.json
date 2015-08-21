@@ -1,0 +1,72 @@
+[
+{}
+,
+{}
+,
+{
+    "firstLevel2": "value2"
+}
+,
+{
+    "firstLevel3": {
+        "secondLevel2": "value1",
+        "secondLevel1": "value1"
+    },
+    "firstLevel2": {
+        "secondLevel2": "value1",
+        "secondLevel1": "value1"
+    }
+}
+,
+{
+    "firstLevel3": {
+        "secondLevel2": "value1",
+        "secondLevel1": "value1"
+    },
+    "firstLevel1": {
+        "secondLevel2": "value1",
+        "secondLevel1": "value1"
+    }
+}
+,
+{
+    "firstLevel2": {
+        "secondLevel2": "value1",
+        "secondLevel1": "value1"
+    },
+    "firstLevel1": {
+        "secondLevel2": "value1",
+        "secondLevel1": "value1"
+    }
+}
+,
+{
+    "firstLevel1": {
+        "secondLevel2": "value1",
+        "secondLevel3": "value1"
+    }
+}
+,
+{
+    "firstLevel1": {
+        "secondLevel3": "value1",
+        "secondLevel1": "value1"
+    }
+}
+,
+{
+    "firstLevel1": {
+        "secondLevel2": "value1",
+        "secondLevel1": "value1"
+    }
+}
+,
+{
+    "firstLevel2": {
+        "secondLevel2": "value1",
+        "secondLevel1": "value1"
+    }
+}
+,
+{}
+]

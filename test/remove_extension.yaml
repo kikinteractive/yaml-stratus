@@ -1,0 +1,126 @@
+---
+# Removing the only simple root node
+main: !merge
+    startingFrom:
+        firstLevel1: value1
+    mergeWith:
+        firstLevel1: !remove
+---
+# Removing the only complex root node
+main: !merge
+    startingFrom:
+        firstLevel1: value1
+        firstLevel2: value2
+    mergeWith:
+        firstLevel1: !remove
+---
+# Removing the first root node
+main: !merge
+    startingFrom:
+        firstLevel1:
+            secondLevel1: value1
+            secondLevel2: value1
+        firstLevel2:
+            secondLevel1: value1
+            secondLevel2: value1
+        firstLevel3:
+            secondLevel1: value1
+            secondLevel2: value1
+    mergeWith:
+        firstLevel1: !remove
+---
+# Removing the second root node
+main: !merge
+    startingFrom:
+        firstLevel1:
+            secondLevel1: value1
+            secondLevel2: value1
+        firstLevel2:
+            secondLevel1: value1
+            secondLevel2: value1
+        firstLevel3:
+            secondLevel1: value1
+            secondLevel2: value1
+    mergeWith:
+        firstLevel2: !remove
+---
+# Removing the last root node
+main: !merge
+    startingFrom:
+        firstLevel1:
+            secondLevel1: value1
+            secondLevel2: value1
+        firstLevel2:
+            secondLevel1: value1
+            secondLevel2: value1
+        firstLevel3:
+            secondLevel1: value1
+            secondLevel2: value1
+    mergeWith:
+        firstLevel3: !remove
+---
+# Removing a first child node
+main: !merge
+    startingFrom:
+        firstLevel1:
+            secondLevel1: value1
+            secondLevel2: value1
+            secondLevel3: value1
+    mergeWith:
+        firstLevel1:
+            secondLevel1: !remove
+---
+# Removing a second child node
+main: !merge
+    startingFrom:
+        firstLevel1:
+            secondLevel1: value1
+            secondLevel2: value1
+            secondLevel3: value1
+    mergeWith:
+        firstLevel1:
+            secondLevel2: !remove
+---
+# Removing a last child node
+main: !merge
+    startingFrom:
+        firstLevel1:
+            secondLevel1: value1
+            secondLevel2: value1
+            secondLevel3: value1
+    mergeWith:
+        firstLevel1:
+            secondLevel3: !remove
+---
+# Removing multiple nodes
+main: !merge
+    startingFrom:
+        firstLevel1:
+            secondLevel1: value1
+            secondLevel2: value1
+        firstLevel2:
+            secondLevel1: value1
+            secondLevel2: value1
+        firstLevel3:
+            secondLevel1: value1
+            secondLevel2: value1
+    mergeWith:
+        firstLevel1: !remove
+        firstLevel3: !remove
+---
+# Removing all nodes
+main: !merge
+    startingFrom:
+        firstLevel1:
+            secondLevel1: value1
+            secondLevel2: value1
+        firstLevel2:
+            secondLevel1: value1
+            secondLevel2: value1
+        firstLevel3:
+            secondLevel1: value1
+            secondLevel2: value1
+    mergeWith:
+        firstLevel1: !remove
+        firstLevel2: !remove
+        firstLevel3: !remove

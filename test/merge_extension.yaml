@@ -1,0 +1,160 @@
+---
+# Merging two root scalar nodes just replaces
+main: !merge
+    startingFrom:
+        firstLevel1: value1
+    mergeWith:
+        firstLevel1: value2
+---
+# Merging two scalar nodes just replaces
+main:
+    top: !merge
+        startingFrom:
+            firstLevel1: value1
+        mergeWith:
+            firstLevel1: value2
+---
+# Merging scalar root node with list just replaces
+main: !merge
+    startingFrom:
+        firstLevel1: value1
+    mergeWith:
+        firstLevel1:
+            - value2
+            - value3
+---
+# Merging scalar node with list just replaces
+main:
+    top: !merge
+        startingFrom:
+            firstLevel1: value1
+        mergeWith:
+            firstLevel1:
+                - value2
+                - value3
+---
+# Merging scalar root node with dictionary just replaces
+main: !merge
+    startingFrom:
+        firstLevel1: value1
+    mergeWith:
+        firstLevel1:
+            secondLevel1: value1
+---
+# Merging scalar node with dictionary just replaces
+main:
+    top: !merge
+        startingFrom:
+            firstLevel1: value1
+        mergeWith:
+            firstLevel1:
+                secondLevel1: value1
+---
+# Merging list root node with scalar just replaces
+main: !merge
+    startingFrom:
+        firstLevel1:
+            - value2
+            - value3
+    mergeWith:
+        firstLevel1: value1
+---
+# Merging list node with scalar just replaces
+main:
+    top: !merge
+        startingFrom:
+            firstLevel1:
+                - value2
+                - value3
+        mergeWith:
+            firstLevel1: value1
+---
+# Merging dictionary root node with dictionary
+main: !merge
+    startingFrom:
+        firstLevel1:
+            secondLevel1: value1
+    mergeWith:
+        firstLevel1:
+            secondLevel2: value2
+---
+# Merging dictionary node with dictionary
+main:
+    top: !merge
+        startingFrom:
+            firstLevel1:
+                secondLevel1: value1
+        mergeWith:
+            firstLevel1:
+                secondLevel2: value2
+---
+# Merging dictionary node with dictionary - some intersection
+main:
+    top: !merge
+        startingFrom:
+            firstLevel1:
+                secondLevel1: value1
+                secondLevel2: value1
+        mergeWith:
+            firstLevel1:
+                secondLevel2: value2
+                secondLevel3: value3
+---
+# Merging dictionary node with dictionary - multi-level
+main:
+    top: !merge
+        startingFrom:
+            firstLevel1:
+                secondLevel1:
+                    thirdLevel1: value1
+                secondLevel2: value1
+        mergeWith:
+            firstLevel1:
+                secondLevel1:
+                    thirdLevel2: value2
+                secondLevel2: value2
+                secondLevel3:
+                    thirdLevel: value3
+---
+# Merging list root node with list
+main: !merge
+    startingFrom:
+        firstLevel1:
+            - value1
+    mergeWith:
+        firstLevel1:
+            - value2
+---
+# Merging list node with list
+main:
+    top: !merge
+        startingFrom:
+            firstLevel1:
+                - value1
+        mergeWith:
+            firstLevel1:
+                - value2
+---
+# Merging list node with list - multi-items
+main:
+    top: !merge
+        startingFrom:
+            firstLevel1:
+                - value1
+                - value2
+        mergeWith:
+            firstLevel1:
+                - value3
+                - value4
+---
+# Merging list node with list - some overlap (results in duplicates)
+main:
+    top: !merge
+        startingFrom:
+            firstLevel1:
+                - value1
+                - value2
+        mergeWith:
+            firstLevel1:
+                - value2
+                - value3

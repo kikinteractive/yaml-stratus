@@ -1,0 +1,151 @@
+---
+# Replacing at root node
+main: !merge
+    startingFrom:
+        firstLevel1:
+            secondLevel1: value1
+    mergeWith:
+        firstLevel1: !replace
+            secondLevel2: value2
+---
+# Replacing at root node
+main: !merge
+    startingFrom:
+        firstLevel1:
+            secondLevel1: value1
+            secondLevel2: value1
+            secondLevel3: value1
+    mergeWith:
+        firstLevel1: !replace
+            secondLevel2: value2
+---
+# Replacing on first root node
+main: !merge
+    startingFrom:
+        firstLevel1:
+            secondLevel1: value1
+            secondLevel2: value1
+        firstLevel2:
+            secondLevel1: value1
+            secondLevel2: value1
+        firstLevel3:
+            secondLevel1: value1
+            secondLevel2: value1
+    mergeWith:
+        firstLevel1: !replace
+            secondLevel3: value3
+---
+# Replacing on second root node
+main: !merge
+    startingFrom:
+        firstLevel1:
+            secondLevel1: value1
+            secondLevel2: value1
+        firstLevel2:
+            secondLevel1: value1
+            secondLevel2: value1
+        firstLevel3:
+            secondLevel1: value1
+            secondLevel2: value1
+    mergeWith:
+        firstLevel2: !replace
+            secondLevel3: value3
+---
+# Replacing on last root node
+main: !merge
+    startingFrom:
+        firstLevel1:
+            secondLevel1: value1
+            secondLevel2: value1
+        firstLevel2:
+            secondLevel1: value1
+            secondLevel2: value1
+        firstLevel3:
+            secondLevel1: value1
+            secondLevel2: value1
+    mergeWith:
+        firstLevel3: !replace
+            secondLevel3: value3
+---
+# Replacing on a first child node
+main: !merge
+    startingFrom:
+        firstLevel1:
+            secondLevel1:
+                thirdLevel1: value1
+            secondLevel2:
+                thirdLevel1: value1
+            secondLevel3:
+                thirdLevel1: value1
+    mergeWith:
+        firstLevel1:
+            secondLevel1: !replace
+                thirdLevel2: value2
+---
+# Replacing on a second child node
+main: !merge
+    startingFrom:
+        firstLevel1:
+            secondLevel1:
+                thirdLevel1: value1
+            secondLevel2:
+                thirdLevel1: value1
+            secondLevel3:
+                thirdLevel1: value1
+    mergeWith:
+        firstLevel1:
+            secondLevel2: !replace
+                thirdLevel2: value2
+---
+# Replacing on a last child node
+main: !merge
+    startingFrom:
+        firstLevel1:
+            secondLevel1:
+                thirdLevel1: value1
+            secondLevel2:
+                thirdLevel1: value1
+            secondLevel3:
+                thirdLevel1: value1
+    mergeWith:
+        firstLevel1:
+            secondLevel3: !replace
+                thirdLevel2: value2
+---
+# Replacing multiple nodes
+main: !merge
+    startingFrom:
+        firstLevel1:
+            secondLevel1: value1
+            secondLevel2: value1
+        firstLevel2:
+            secondLevel1: value1
+            secondLevel2: value1
+        firstLevel3:
+            secondLevel1: value1
+            secondLevel2: value1
+    mergeWith:
+        firstLevel1: !replace
+            secondLevel3: value3
+        firstLevel3: !replace
+            secondLevel3: value3
+---
+# Replacing all nodes
+main: !merge
+    startingFrom:
+        firstLevel1:
+            secondLevel1: value1
+            secondLevel2: value1
+        firstLevel2:
+            secondLevel1: value1
+            secondLevel2: value1
+        firstLevel3:
+            secondLevel1: value1
+            secondLevel2: value1
+    mergeWith:
+        firstLevel1: !replace
+            secondLevel3: value3
+        firstLevel2: !replace
+            secondLevel2: value3
+        firstLevel3: !replace
+            secondLevel3: value3
