@@ -15,7 +15,7 @@ included comments, that were impossible to include in JSON.
 
 * comments
 * back references
-* embedded declarations using indentation rather than the brace brackers and quotations required by JSON
+* embedded declarations using indentation rather than the brace brackets and quotations required by JSON
 * block literals
 
 Note also that JSON is YAML, so familiar JSON data can be embedded within YAML.
@@ -36,7 +36,7 @@ To install from project directory
 
 `pip install -e .`
 
-If this was a public repo, we could incorporate the installation into [PyPi](https://pypi.python.org/pypi) and installation would be simply:
+To install via [pip](https://pypi.python.org/pypi) simply:
 
 `pip install yamlstratus`
 

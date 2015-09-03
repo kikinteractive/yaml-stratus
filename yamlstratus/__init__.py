@@ -82,7 +82,7 @@ def to_json(objs):
         by YamlStratus
     :rtype: string in JSON format
     """
-    return json.dumps(objs, indent=4, separators=(',', ': '))
+    return json.dumps(objs, sort_keys=True, indent=4, separators=(',', ': '))
 
 
 def load_as_json(stream, root_tag='main', include_dirs=None, params=None):
