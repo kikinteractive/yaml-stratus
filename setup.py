@@ -47,12 +47,12 @@ setup(
     name='yamlstratus',
     scripts=['scripts/ystratus.py'],
     version=yamlstratus.__version__,
-    url='http://github.com/shannonwhite/yamlstratus/',
+    url='https://github.com/kikinteractive/yaml-stratus/',
+    download_url='https://github.com/kikinteractive/yaml-stratus/tarball/0.1',
     license='Apache Software License',
-    author='Shannon White',
+    author='Kik Interactive',
     tests_require=['pytest'],
     cmdclass={'test': PyTest},
-    author_email='shannon.white@kik.com',
     description='Python for yamlstratus builder',
     long_description=long_description,
     packages=['yamlstratus'],
@@ -61,7 +61,6 @@ setup(
     test_suite='yamlstratus.test.test_yamlstratus',
     classifiers=[
         'Programming Language :: Python',
-        'Development Status :: 1',
         'Natural Language :: English',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
@@ -69,6 +68,9 @@ setup(
         'Operating System :: OS Independent',
         'Topic :: Software Development :: Libraries :: Python Modules',
         "Topic :: Text Processing :: Markup",
+    ],
+    install_requires=[
+          'PyYAML',
     ],
     extras_require={
         'testing': ['pytest'],

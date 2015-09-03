@@ -395,4 +395,4 @@ Kik Interactive
 
 Use of YAML Stratus is subject to the Terms & Conditions and the Acceptable Use Policy.
 
-The source for YAML Stratus is available under the Apache 2.0 license. See the LICENSE file for details.
+The source for YAML Stratus is available under the Apache 2.0 license. See the LICENSE.txt file for details.
