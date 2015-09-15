@@ -149,3 +149,13 @@ main: !merge
             secondLevel2: value3
         firstLevel3: !replace
             secondLevel3: value3
+---
+# Replacing non-existent node
+main: !merge
+    startingFrom:
+        firstLevel1:
+            secondLevel1: value1
+    mergeWith:
+        # No node to replace, so effect same as if !replace was omitted
+        firstLevel2: !replace
+            secondLevel2: value2

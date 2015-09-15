@@ -130,4 +130,51 @@
         ]
     }
 }
+,
+{
+    "top": [
+        "value1",
+        "value2",
+        "value2",
+        "value3"
+    ]
+}
+,
+{
+    "top": [
+        "value1",
+        { "key1": "value1", "key2": "override", "key3": "value3"},
+        "value3"
+    ]
+}
+,
+{
+    "firstLevel1": {
+        "secondLevel11": "value11 do not override",
+        "secondLevel12": "value12 override",
+        "secondLevel13": "value13 not an override"
+    },
+    "firstLevel2": {
+        "secondLevel21": "value21 do not override",
+        "secondLevel22": "value22 override",
+        "secondLevel23": "value23 override",
+        "secondLevel24": "value24 override",
+        "secondLevel25": "value25 do not override",
+        "secondLevel26": "value26 override",
+        "secondLevel27": "value27 override",
+        "secondLevel28": "value28 do not override",
+        "secondLevel29": "value29 override",
+        "secondLevel30": "value30 do not override"
+    }
+}
+,
+{
+    "firstLevel1": {
+        "secondLevel1": "value1 final override",
+        "secondLevel2": "value2 final override",
+        "secondLevel3": "value3 final override",
+        "secondLevel4": "value4 final override",
+        "secondLevel5": "value5 final override"
+    }
+}
 ]

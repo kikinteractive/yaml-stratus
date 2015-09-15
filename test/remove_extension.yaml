@@ -124,3 +124,11 @@ main: !merge
         firstLevel1: !remove
         firstLevel2: !remove
         firstLevel3: !remove
+---
+# Removing non-existent node
+main: !merge
+    startingFrom:
+        firstLevel1: value1
+    mergeWith:
+        # Ignored
+        firstLevel2: !remove

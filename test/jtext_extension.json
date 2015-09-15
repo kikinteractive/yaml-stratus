@@ -121,5 +121,15 @@
             ]
         ]
     }
+},
+{
+    "say": {
+        "Fn::Join": [
+            "",
+            [
+                "Hello, I must be going\n"
+            ]
+        ]
+    }
 }
 ]

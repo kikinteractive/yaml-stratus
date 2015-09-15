@@ -69,4 +69,8 @@
 }
 ,
 {}
+,
+{
+    "firstLevel1": "value1"
+}
 ]
