@@ -223,6 +223,41 @@ main: !merge
                 secondLevel29: value29 override
                 secondLevel30: value30 do not override
 ---
+# Embedded merges in startingFrom and mergeWith (root)
+main: !merge
+    startingFrom:
+        firstLevel1: !merge
+            startingFrom:
+                # firstLevel1 - initial
+                secondLevel1: value1 do not override
+                secondLevel2: value2 override in firstlevel1 - override 1
+                secondLevel3: value3 override in firstlevel1 - override 2
+                secondLevel4: value4 override in firstlevel1 - override 3
+
+            mergeWith:
+                # firstLevel1 - override 1
+                secondLevel2: value2 override
+                secondLevel5: value5 do not override
+                secondLevel6: value6 override in firstlevel1 - override 2
+                secondLevel7: value7 override in firstlevel1 - override 3
+
+    mergeWith: !merge
+        startingFrom:
+            firstLevel1:
+                # firstLevel1 - override 2
+                secondLevel3: value3 override
+                secondLevel6: value6 override
+                secondLevel8: value8 do not override
+                secondLevel9: value9 override in firstlevel1 - override 3
+
+        mergeWith:
+            firstLevel1:
+                # firstLevel1 - override 3
+                secondLevel4: value4 override
+                secondLevel7: value7 override
+                secondLevel9: value9 override
+                secondLevel0: value0 do not override
+---
 # Many overrides of same key
 main: !merge
     startingFrom: !merge
@@ -242,16 +277,17 @@ main: !merge
                 secondLevel4: value4 first override
                 secondLevel5: value5 override in Overrides 2, and 3
 
-    mergeWith:
-        firstLevel1: !merge
-            startingFrom:
+    mergeWith: !merge
+        startingFrom:
+            firstLevel1:
                 # Override 2
                 secondLevel1: value1 final override
                 secondLevel2: value2 first override
                 secondLevel4: value4 second override
                 secondLevel5: value5 first override
 
-            mergeWith:
+        mergeWith:
+            firstLevel1:
                 # Override 3
                 secondLevel2: value2 final override
                 secondLevel3: value3 final override

@@ -170,6 +170,21 @@
 ,
 {
     "firstLevel1": {
+        "secondLevel1": "value1 do not override",
+        "secondLevel2": "value2 override",
+        "secondLevel3": "value3 override",
+        "secondLevel4": "value4 override",
+        "secondLevel5": "value5 do not override",
+        "secondLevel6": "value6 override",
+        "secondLevel7": "value7 override",
+        "secondLevel8": "value8 do not override",
+        "secondLevel9": "value9 override",
+        "secondLevel0": "value0 do not override"
+    }
+}
+,
+{
+    "firstLevel1": {
         "secondLevel1": "value1 final override",
         "secondLevel2": "value2 final override",
         "secondLevel3": "value3 final override",
