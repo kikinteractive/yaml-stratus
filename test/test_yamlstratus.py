@@ -130,3 +130,156 @@ def test_load_as_json():
                 expected_json = all_expected_json[json_cnt]
                 compare_json(expected_json, actual_json)
                 json_cnt += 1
+
+
+def test_include_file_not_found():
+    yaml_str = """
+                ---
+                # Include root node of invalid file
+                main: !include unknown
+                ---
+                # Include invalid file
+                main:
+                    top: !include unknown
+                """
+    for yaml in yaml_str.split('---')[1:]:
+        try:
+            yamlstratus.load_as_json(yaml, include_dirs=["test"])
+            assert False
+        except IOError:
+            pass
+
+def test_include_error():
+    yaml_str = """
+                ---
+                # Include down one to unknown tag
+                main:
+                    top: !include test1.unknown
+                ---
+                # Include down many levels to unknown tag
+                main:
+                top: !include test1.level1.level2.level3.level4.unknown
+                """
+    for yaml in yaml_str.split('---')[1:]:
+        try:
+            yamlstratus.load_as_json(yaml, include_dirs=["test"])
+            assert False
+        except KeyError:
+            pass
+
+def test_include_base64_file_not_found():
+    yaml_str = """
+                ---
+                # Include
+                main: !include-base64 unknown.yaml
+                ---
+                # Include where suffix understood
+                main: !include-base64 unknown
+                """
+    for yaml in yaml_str.split('---')[1:]:
+        try:
+            yamlstratus.load_as_json(yaml, include_dirs=["test"])
+            assert False
+        except IOError:
+            pass
+
+def test_merge_syntax_errors():
+    yaml_str = """
+                ---
+                main:
+                    top: !merge
+                        startingFrom:
+                            - value1
+                            - value2
+                ---
+                main:
+                    top: !merge
+                        mergeWith:
+                            - value1
+                            - value2
+                ---
+                main:
+                    top: !merge
+                        startingWith:
+                            - value1
+                            - value2
+                        mergeFrom:
+                            - value1
+                            - value2
+                ---
+                main:
+                    top: !merge
+                        startingFrom:
+                            - value1
+                            - value2
+                        mergeWith:
+                            - value1
+                            - value2
+                        extraNode:
+                            - value1
+                            - value2
+                """
+    for yaml in yaml_str.split('---')[1:]:
+        try:
+            yamlstratus.load_as_json(yaml, include_dirs=["test"])
+            assert False
+        except KeyError:
+            pass
+
+def test_merge_type_mismatch_errors():
+    yaml_str = """
+                ---
+                main:
+                    top: !merge
+                        startingFrom:
+                            - value1
+                        mergeWith:
+                            key1: value1
+                ---
+                main:
+                    top: !merge
+                        startingFrom:
+                            key1: value1
+                        mergeWith:
+                            - value1
+                ---
+                main:
+                    top: !merge
+                        startingFrom:
+                            key1: value
+                        mergeWith: 123
+                ---
+                main:
+                    top: !merge
+                        startingFrom: 123
+                        mergeWith:
+                            key1: value
+                ---
+                main:
+                    top: !merge
+                        startingFrom:
+                            - value1
+                        mergeWith: 123
+                ---
+                main:
+                    top: !merge
+                        startingFrom: 123
+                        mergeWith:
+                            - value1
+                ---
+                main:
+                    top: !merge
+                        startingFrom: 123
+                        mergeWith: 123
+                ---
+                main:
+                    top: !merge
+                        startingFrom: value1
+                        mergeWith: value2
+                """
+    for yaml in yaml_str.split('---')[1:]:
+        try:
+            yamlstratus.load_as_json(yaml, include_dirs=["test"])
+            assert False
+        except ValueError:
+            pass

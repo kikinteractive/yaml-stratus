@@ -17,16 +17,60 @@ import os.path
 import yaml
 
 
-class MergeNode(object):
-    """Represents a node in YAML document being merged"""
+class MergeDictionaries(object):
+    """
+    Represents two dictionaries in a YAML document being merged.
+    """
 
     def __init__(self, starting_from, merge_with):
         self.starting_from = starting_from
         self.merge_with = merge_with
         self.is_merged = False
-        # The result of the merge should be typed like the starting node
-        self.target = [] if isinstance(starting_from, list) or isinstance(
-            starting_from, str) else dict()
+        # target is the element in the resulting json. Add `self` to
+        # easily retrieve merge instruction
+        self.target = dict(merge_node=self)
+
+    def mark_merged(self):
+        self.is_merged = True
+        # Remove this MergeDictionaries from the resulting json
+        del self.target["merge_node"]
+
+    @staticmethod
+    def dictionary_merge_required(candidate_dictionary):
+        """Identify a dict that is the target of a MergeDictionaries instance"""
+        if isinstance(candidate_dictionary, dict):
+            if "merge_node" in candidate_dictionary:
+                node = candidate_dictionary["merge_node"];
+                if isinstance(node, MergeDictionaries):
+                    return node
+        return None
+
+
+class MergeLists(object):
+    """Represents two lists in a YAML document being merged"""
+
+    def __init__(self, starting_from, merge_with):
+        self.starting_from = starting_from
+        self.merge_with = merge_with
+        self.is_merged = False
+        # target is the element in the resulting json. Add `self` to
+        # easily retrieve merge instruction
+        self.target = [self]
+
+    def mark_merged(self):
+        self.is_merged = True
+        # Remove this MergeLists from the resulting json
+        del self.target[0:len(self.target)]
+
+    @staticmethod
+    def list_merge_required(candidate_list):
+        """Identify a list that is the target of a MergeLists instance"""
+        if isinstance(candidate_list, list):
+            if len(candidate_list) == 1:
+                node = candidate_list[0];
+                if isinstance(node, MergeLists):
+                    return node
+        return None
 
 
 class YamlStratusLoader(yaml.Loader):
@@ -71,7 +115,7 @@ class YamlStratusLoader(yaml.Loader):
                 if path is not None:
                     break
         if path is None:
-            raise Exception("Cannot find {0}".format(filename))
+            raise IOError("Cannot find {0}".format(filename))
         return path
 
     def include(self, node):
@@ -178,12 +222,27 @@ class YamlStratusLoader(yaml.Loader):
         mappings = self.construct_mapping(node)
 
         if 'startingFrom' not in mappings:
-            raise Exception(
+            raise KeyError(
                 "!merge extension requires child node 'startingFrom'")
         if 'mergeWith' not in mappings:
-            raise Exception("!merge extension requires child node 'mergeWith'")
+            raise KeyError("!merge extension requires child node 'mergeWith'")
+        if len(mappings) > 2:
+            raise KeyError("!merge extension requires only child nodes "
+                           + "'startingFrom' and 'mergeWith'")
 
-        merge_node = MergeNode(mappings['startingFrom'], mappings['mergeWith'])
+        if isinstance(mappings['startingFrom'], list):
+            if not isinstance(mappings['mergeWith'], list):
+                raise ValueError("Attempt to merge list with non-list")
+            merge_node = MergeLists(mappings['startingFrom'],
+                                    mappings['mergeWith'])
+        elif isinstance(mappings['startingFrom'], dict):
+            if not isinstance(mappings['mergeWith'], dict):
+                raise ValueError(
+                    "Attempt to merge dictionary with non-dictionary")
+            merge_node = MergeDictionaries(mappings['startingFrom'],
+                                           mappings['mergeWith'])
+        else:
+            raise ValueError("Attempt to merge scalars")
 
         self.merge_nodes.append(merge_node)
 
@@ -206,9 +265,19 @@ class YamlStratusLoader(yaml.Loader):
         for merge_node in self.merge_nodes:
             self.merge_objects(merge_node)
 
+    def resolve_merge_list(self, candidate_list):
+        """Merge list, if necessary"""
+        node = MergeLists.list_merge_required(candidate_list)
+        if node is not None:
+            self.merge_objects(node)
+
     def merge_lists(self, src, override):
         """For merging to YAML nodes of type list"""
         merged = []
+
+        # Handle lists that, in turn, also need merging
+        self.resolve_merge_list(src)
+        self.resolve_merge_list(override)
 
         if src is not None and override not in self.replaced_nodes:
             for val in src:
@@ -219,6 +288,12 @@ class YamlStratusLoader(yaml.Loader):
 
         return merged
 
+    def resolve_merge_dictionary(self, candidate_dictionary):
+        """Merge dictionary, if necessary"""
+        node = MergeDictionaries.dictionary_merge_required(candidate_dictionary)
+        if node is not None:
+            self.merge_objects(node)
+
     def merge_dictionaries(self, src, override):
         """For merging to YAML nodes of type dictionary"""
         merged = dict()
@@ -227,12 +302,29 @@ class YamlStratusLoader(yaml.Loader):
             # Ignore source
             src = None
 
+        # Handle dictionaries that, in turn, also need merging
+        if src is not None:
+            self.resolve_merge_dictionary(src)
+        self.resolve_merge_dictionary(override)
+
         if src is not None:
             # Recursively merge the children of src with children of override
             for inner_key in src:
                 if inner_key in override:
-                    merged_children = self.merge_objects(
-                        MergeNode(src[inner_key], override[inner_key]))
+                    if override[inner_key] == self.removed_node:
+                        # Remove the key
+                        merged_children = None
+                    elif isinstance(src[inner_key], list) and isinstance(
+                            override[inner_key], list):
+                        merged_children = self.merge_objects(
+                            MergeLists(src[inner_key], override[inner_key]))
+                    elif isinstance(src[inner_key], dict) and isinstance(
+                            override[inner_key], dict):
+                        merged_children = self.merge_objects(
+                            MergeDictionaries(src[inner_key],
+                                              override[inner_key]))
+                    else:
+                        merged_children = override[inner_key]
                 else:
                     merged_children = src[inner_key]
                 if merged_children is not None:
@@ -241,6 +333,9 @@ class YamlStratusLoader(yaml.Loader):
         for inner_key in override:
             # Add the children in override that are not in src
             if src is None or inner_key not in src:
+                if override[inner_key] == self.removed_node:
+                    # Remove the key
+                    continue
                 merged[inner_key] = override[inner_key]
 
         return merged
@@ -249,49 +344,26 @@ class YamlStratusLoader(yaml.Loader):
         """Recursively merge two YAML nodes"""
         if merge_node.is_merged:
             return merge_node.target
-        merge_node.is_merged = True
+
+        merge_node.mark_merged()
 
         if self.removed_node == merge_node.merge_with:
             # Indicates a YAML node being removed
             return None
 
-        if isinstance(merge_node.starting_from,
-                      MergeNode) and not merge_node.starting_from.is_merged:
-            # starting_from is a merge node that needs to be processed
-            merge_node.starting_from = self.merge_objects(
-                merge_node.starting_from)
-
-        if isinstance(merge_node.merge_with,
-                      MergeNode) and not merge_node.merge_with.is_merged:
-            # merge_with is a merge node that needs to be processed
-            merge_node.merge_with = self.merge_objects(merge_node.merge_with)
-
         # Check for merging of two YAML lists
-        if isinstance(merge_node.starting_from, list) and isinstance(
-                merge_node.merge_with, list):
+        if isinstance(merge_node, MergeLists):
             merge_node.target.extend(self.merge_lists(merge_node.starting_from,
                                                       merge_node.merge_with))
             return merge_node.target
-
-        # Check for merging of two collections
-        if hasattr(merge_node.starting_from, '__iter__') and hasattr(
-                merge_node.merge_with, '__iter__'):
-            if isinstance(merge_node.starting_from, list) or isinstance(
-                    merge_node.merge_with, list):
-                # A YAML list cannot be merged with a YAML dictionary
-                raise Exception("Cannot merge lists with dictionaries")
-
+        elif isinstance(merge_node, MergeDictionaries):
             merged = self.merge_dictionaries(merge_node.starting_from,
                                              merge_node.merge_with)
             for key in merged:
                 merge_node.target[key] = merged[key]
             return merge_node.target
-
         else:
-            # Merging scalars
-            if self.removed_node == merge_node.merge_with:
-                return None
-            return merge_node.merge_with
+            raise Exception("Unexpected merging node")
 
 
 YamlStratusLoader.add_constructor('!include', YamlStratusLoader.include)

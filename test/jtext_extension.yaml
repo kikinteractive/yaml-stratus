@@ -41,3 +41,9 @@ main:
 main:
     say: !jtext |
         Hello !{Ref: FirstName!}
+---
+# No ref
+main:
+    say: !jtext |
+        Hello, I must be going
+
