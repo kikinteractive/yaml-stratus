@@ -207,24 +207,22 @@ class YamlStratusLoader(yaml.Loader):
             ]
         }
 
-    # Tag that merges two node to a single node
-    # This one seems really useful
     def merge(self, node):
         """
-        Extension for merging trees of nodes. Must have exactly two child nodes,
-        one called 'startingFrom' and the other called 'mergeWith'.  The tree of
-        nodes under 'startingFrom' is merged with the tree of nodes under
-        'mergeWith'.
-
         Note that here we just record the nodes needing merge. The actual merge
         is done in a subsequent pass.
         """
+        # deep is undocumented, but it forces depth-first traversal
         mappings = self.construct_mapping(node, deep=True)
         if len(mappings) < 2:
             raise KeyError("!merge extension requires at least 2 child nodes ")
 
+        # Mapping should be in order of appearance. But because we use keys,
+        # we aren't 100% sure the order is maintained
         keys = sorted(mappings.keys())
-        # handle legacy mappings
+
+        # handle legacy mapping, but only if there are exactly 2 elements
+        # because names can be reused, though that'll cause havoc with
         if 'startingFrom' in mappings and 'mergeWith' in mappings:
             if len(mappings) == 2:
                 keys = sorted(mappings.keys(), reverse=True)
