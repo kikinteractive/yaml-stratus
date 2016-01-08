@@ -220,7 +220,7 @@ class YamlStratusLoader(yaml.Loader):
         is done in a subsequent pass.
         """
         mappings = self.construct_mapping(node, deep=True)
-        if len(mappings) > 2:
+        if len(mappings) < 2:
             raise KeyError("!merge extension requires at least 2 child nodes ")
 
         keys = sorted(mappings.keys())
