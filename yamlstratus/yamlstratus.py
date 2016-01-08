@@ -345,11 +345,7 @@ class YamlStratusLoader(yaml.Loader):
             return merge_node.target
 
         merge_node.mark_merged()
-        # TODO: Fix this
-        #if self.removed_node == merge_node.merge_with:
-            # Indicates a YAML node being removed
-        #    return None
-
+        
         # Check for merging of two YAML lists
         if isinstance(merge_node, MergeLists):
             merge_temp = merge_node.lists[0]
