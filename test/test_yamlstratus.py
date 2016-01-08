@@ -307,6 +307,6 @@ def test_merge_remove_list_errors():
         try:
             yamlstratus.load_as_json(yaml, include_dirs=["test"])
             assert False
-        except KeyError:
+        except ValueError:
             pass
 
