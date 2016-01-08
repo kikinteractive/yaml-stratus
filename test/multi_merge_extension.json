@@ -1,0 +1,101 @@
+[
+{},
+{
+    "t1firstLevel1": {
+        "secondLevel11": "value11 do not override",
+        "secondLevel13": "value13 not an override"
+    },
+    "t1firstLevel2": {
+        "secondLevel21": "value21 do not override",
+        "secondLevel22": "value22 override",
+        "secondLevel23": "value23 override",
+        "secondLevel24": "value24 override",
+        "secondLevel25": "value25 do not override",
+        "secondLevel26": "value26 override",
+        "secondLevel27": "value27 override",
+        "secondLevel28": "value28 do not override",
+        "secondLevel29": "value29 override",
+        "secondLevel30": "value30 override",
+        "secondLevel31": "value31 do not override"
+    }
+}
+,
+{
+    "t2firstLevel1": {
+        "secondLevel1": "value1 do not override",
+        "secondLevel2": "value2 override",
+        "secondLevel3": "value3 override",
+        "secondLevel4": "value4 override",
+        "secondLevel5": "value5 do not override",
+        "secondLevel6": "value6 override",
+        "secondLevel7": "value7 override",
+        "secondLevel8": "value8 do not override",
+        "secondLevel9": "value9 override",
+        "secondLevel0": "value0 do not override"
+    }
+}
+,
+{
+    "t3firstLevel1": {
+        "secondLevel1": "value1 final override",
+        "secondLevel2": "value2 final override",
+        "secondLevel3": "value3 final override",
+        "secondLevel4": "value4 final override",
+        "secondLevel5": "value5 final override"
+    }
+},
+{
+    "t4firstLevel1": {
+        "secondLevel1": "value1 final override",
+        "secondLevel2": "value2 final override",
+        "secondLevel3": "value3 final override",
+        "secondLevel4": "value4 final override",
+        "secondLevel5": "value5 final override"
+    }
+},
+[
+    "secondLevel1",
+    "secondLevel2",
+    "secondLevel3",
+    "secondLevel4",
+    "secondLevel5",
+    "secondLevel6",
+    "secondLevel7",
+    "secondLevel8",
+    "secondLevel8",
+    "secondLevel7",
+    "secondLevel6",
+    "secondLevel5",
+    "secondLevel4",
+    "secondLevel3",
+    "secondLevel2",
+    "secondLevel1"
+],
+[
+    "h",
+    "f",
+    "d",
+    "b",
+    "g",
+    "e",
+    "c",
+    "a",
+    "secondLevel8",
+    "secondLevel7",
+    "secondLevel6",
+    "secondLevel5",
+    "secondLevel4",
+    "secondLevel3",
+    "secondLevel2",
+    "secondLevel1"
+],
+[
+    "f",
+    "h",
+    "c",
+    "a",
+    "b",
+    "d"
+]
+
+]
