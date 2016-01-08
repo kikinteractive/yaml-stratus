@@ -352,13 +352,11 @@ class YamlStratusLoader(yaml.Loader):
 
         # Check for merging of two YAML lists
         if isinstance(merge_node, MergeLists):
-            merge_temp = []
+            merge_temp = merge_node.lists[0]
             # merge list just appends two lists unless one of them is being deleted
-            for i in range(0, len(merge_node.lists), 2):
-                if i + 1 < len(merge_node.lists):
-                    merge_temp.extend(self.merge_lists(merge_node.lists[i], merge_node.lists[i+1]))
-                else:
-                    merge_temp.extend(self.merge_lists(None, merge_node.lists[i]))
+            # passing in None as the first element just appends the second list
+            for i in range(1, len(merge_node.lists)):
+                merge_temp = self.merge_lists(merge_temp, merge_node.lists[i])
             merge_node.target.extend(merge_temp)
             return merge_node.target
         elif isinstance(merge_node, MergeDictionaries):
