@@ -228,11 +228,11 @@ class YamlStratusLoader(yaml.Loader):
                 keys = sorted(mappings.keys(), reverse=True)
         
         if isinstance(mappings[keys[0]], list):
-            if not all(map(lambda x: isinstance(x, list), mappings.values())):
+            if not all([isinstance(x, list) for x in mappings.values()]):
                 raise ValueError("Attempt to merge list with non-list")
             merge_node = MergeLists([mappings[x] for x in keys])
         elif isinstance(mappings[keys[0]], dict):
-            if not all(map(lambda x: isinstance(x, dict), mappings.values())):
+            if not all([isinstance(x, dict) for x in mappings.values()]):
                 raise ValueError(
                     "Attempt to merge dictionary with non-dictionary")
             merge_node = MergeDictionaries([mappings[x] for x in keys])
