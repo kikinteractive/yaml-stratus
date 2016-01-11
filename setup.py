@@ -67,6 +67,8 @@ setup(
         'Operating System :: OS Independent',
         'Topic :: Software Development :: Libraries :: Python Modules',
         "Topic :: Text Processing :: Markup",
+        "Programming Language :: Python :: 2.6",
+        "Programming Language :: Python :: 2.7"
     ],
     install_requires=[
           'PyYAML',
