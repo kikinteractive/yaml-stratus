@@ -249,7 +249,7 @@ class YamlStratusLoader(yaml.Loader):
         param_parts = self.construct_scalar(node).split(' ', 1)
         # If the parameter isn't specified on the cmd line, return a default if
         # one is provided
-        if not param_parts[0] in self.params_dict:
+        if param_parts[0] not in self.params_dict:
             if len(param_parts) > 1:
                 return param_parts[1].strip('"')
             else:

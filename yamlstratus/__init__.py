@@ -98,7 +98,7 @@ def load_as_json(stream, root_tag='main', include_dirs=None, params=None):
     """
     objs = load(stream, include_dirs=include_dirs, params=params,
                 root_tag=root_tag)
-    return to_json(objs) if not objs is None else []
+    return to_json(objs) if objs is not None else []
 
 
 def load_all_as_json(stream, include_dirs=None, params=None, root_tag='main'):
