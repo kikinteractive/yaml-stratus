@@ -16,7 +16,7 @@ import json
 
 from .yamlstratus import YamlStratus
 
-__version__ = '1.0.2'
+__version__ = '1.0.3'
 
 
 def load(stream, root_tag='main', include_dirs=None, params=None):
