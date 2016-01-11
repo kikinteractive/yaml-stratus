@@ -39,7 +39,7 @@ class MergeDictionaries(object):
         """Identify a dict that is the target of a MergeDictionaries instance"""
         if isinstance(candidate_dictionary, dict):
             if "merge_node" in candidate_dictionary:
-                node = candidate_dictionary["merge_node"];
+                node = candidate_dictionary["merge_node"]
                 if isinstance(node, MergeDictionaries):
                     return node
         return None
@@ -65,7 +65,7 @@ class MergeLists(object):
         """Identify a list that is the target of a MergeLists instance"""
         if isinstance(candidate_list, list):
             if len(candidate_list) == 1:
-                node = candidate_list[0];
+                node = candidate_list[0]
                 if isinstance(node, MergeLists):
                     return node
         return None
@@ -119,7 +119,7 @@ class YamlStratusLoader(yaml.Loader):
     def include(self, node):
         """
         Extension that handles including of other yaml files
-        Allows including only an arbitrary subset of the other file by 
+        Allows including only an arbitrary subset of the other file by
         specifying "filename.level1.level2.subset"
         """
         name = self.construct_scalar(node)
@@ -226,7 +226,7 @@ class YamlStratusLoader(yaml.Loader):
         if 'startingFrom' in mappings and 'mergeWith' in mappings:
             if len(mappings) == 2:
                 keys = sorted(mappings.keys(), reverse=True)
-        
+
         if isinstance(mappings[keys[0]], list):
             if not all([isinstance(x, list) for x in mappings.values()]):
                 raise ValueError("Attempt to merge list with non-list")
@@ -318,7 +318,7 @@ class YamlStratusLoader(yaml.Loader):
                             override[inner_key], dict):
                         merged_children = self.merge_objects(
                             MergeDictionaries([src[inner_key],
-                                              override[inner_key]]))
+                                               override[inner_key]]))
                     else:
                         merged_children = override[inner_key]
                 else:
@@ -343,7 +343,7 @@ class YamlStratusLoader(yaml.Loader):
             return merge_node.target
 
         merge_node.mark_merged()
-        
+
         # Check for merging of two YAML lists
         if isinstance(merge_node, MergeLists):
             merge_temp = merge_node.lists[0]
