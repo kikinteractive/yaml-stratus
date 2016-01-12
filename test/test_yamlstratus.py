@@ -183,7 +183,7 @@ def test_include_base64_file_not_found():
         except IOError:
             pass
 
-def test_merge_syntax_errors():
+def test_merge_single_key_error():
     yaml_str = """
                 ---
                 main:
