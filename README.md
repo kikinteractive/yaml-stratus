@@ -186,8 +186,11 @@ The second parameter to the `!param` extension is the default value. It does not
 
 ### Inheritance using `!merge`
 
-Allows the merging of data from two source data hierarchies. This is the heart of `yamlstratus` allowing
-a kind of inheritance. Ex.
+Allows the merging of data from two or more source data hierarchies. Note that data hierarchies are
+merged in alphabetical order, with later entries overwriting earlier ones. It is highly recommended
+to use a numerical prefix on the individual hierarchies.
+
+This is the heart of `yamlstratus` allowing a kind of inheritance. Ex.
 
 yaml:
 ```
@@ -202,8 +205,8 @@ define: &HttpTomcatSecurityGroup
 
 ...
     MyInstanceSecurityGroup: !merge
-        startingFrom: *HttpTomcatSecurityGroup
-        mergeWith:
+        1_security_group: *HttpTomcatSecurityGroup
+        2_Properties:
             Properties:
                 GroupDescription: Example http/https security group for an instance hosting tomcat
                 SecurityGroupIngress:

@@ -217,8 +217,9 @@ class YamlStratusLoader(yaml.Loader):
         if len(mappings) < 2:
             raise KeyError("!merge extension requires at least 2 child nodes ")
 
-        # Mapping should be in order of appearance. But because we use keys,
-        # we aren't 100% sure the order is maintained
+        # Ideally, mapping would be in order of appearance. But because we use
+        # keys, we aren't 100% sure the order is maintained
+        # So, force mapping in alphabetical order
         keys = sorted(mappings.keys())
 
         # handle legacy mapping, but only if there are exactly 2 elements
