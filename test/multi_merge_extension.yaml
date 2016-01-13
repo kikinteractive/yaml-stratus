@@ -1,7 +1,7 @@
 ---
 # multilevel merge w/ remove
 main: !merge
-    dict1: 
+    dict1:
         t1firstLevel1:
             secondLevel11: value11 do not override
             secondLevel12: value12 please override
@@ -215,9 +215,9 @@ main: !merge
             - c
             - a
 
-        a: 
+        a:
             - f
             - h
-    list2: 
+    list2:
         - b
         - d
