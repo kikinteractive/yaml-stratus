@@ -22,9 +22,8 @@ class MergeDictionaries(object):
     Represents two dictionaries in a YAML document being merged.
     """
 
-    def __init__(self, starting_from, merge_with):
-        self.starting_from = starting_from
-        self.merge_with = merge_with
+    def __init__(self, dictionaries):
+        self.dicts = dictionaries
         self.is_merged = False
         # target is the element in the resulting json. Add `self` to
         # easily retrieve merge instruction
@@ -40,7 +39,7 @@ class MergeDictionaries(object):
         """Identify a dict that is the target of a MergeDictionaries instance"""
         if isinstance(candidate_dictionary, dict):
             if "merge_node" in candidate_dictionary:
-                node = candidate_dictionary["merge_node"];
+                node = candidate_dictionary["merge_node"]
                 if isinstance(node, MergeDictionaries):
                     return node
         return None
@@ -49,9 +48,8 @@ class MergeDictionaries(object):
 class MergeLists(object):
     """Represents two lists in a YAML document being merged"""
 
-    def __init__(self, starting_from, merge_with):
-        self.starting_from = starting_from
-        self.merge_with = merge_with
+    def __init__(self, lists):
+        self.lists = lists
         self.is_merged = False
         # target is the element in the resulting json. Add `self` to
         # easily retrieve merge instruction
@@ -67,7 +65,7 @@ class MergeLists(object):
         """Identify a list that is the target of a MergeLists instance"""
         if isinstance(candidate_list, list):
             if len(candidate_list) == 1:
-                node = candidate_list[0];
+                node = candidate_list[0]
                 if isinstance(node, MergeLists):
                     return node
         return None
@@ -121,6 +119,8 @@ class YamlStratusLoader(yaml.Loader):
     def include(self, node):
         """
         Extension that handles including of other yaml files
+        Allows including only an arbitrary subset of the other file by
+        specifying "filename.level1.level2.subset"
         """
         name = self.construct_scalar(node)
 
@@ -207,45 +207,40 @@ class YamlStratusLoader(yaml.Loader):
             ]
         }
 
-    # Tag that merges two node to a single node
-    # This one seems really useful
     def merge(self, node):
         """
-        Extension for merging trees of nodes. Must have exactly two child nodes,
-        one called 'startingFrom' and the other called 'mergeWith'.  The tree of
-        nodes under 'startingFrom' is merged with the tree of nodes under
-        'mergeWith'.
-
         Note that here we just record the nodes needing merge. The actual merge
         is done in a subsequent pass.
         """
-        mappings = self.construct_mapping(node)
+        # deep is undocumented, but it forces depth-first traversal
+        mappings = self.construct_mapping(node, deep=True)
+        if len(mappings) < 2:
+            raise KeyError("!merge extension requires at least 2 child nodes ")
 
-        if 'startingFrom' not in mappings:
-            raise KeyError(
-                "!merge extension requires child node 'startingFrom'")
-        if 'mergeWith' not in mappings:
-            raise KeyError("!merge extension requires child node 'mergeWith'")
-        if len(mappings) > 2:
-            raise KeyError("!merge extension requires only child nodes "
-                           + "'startingFrom' and 'mergeWith'")
+        # Ideally, mapping would be in order of appearance. But because we use
+        # keys, we aren't 100% sure the order is maintained
+        # So, force mapping in alphabetical order
+        keys = sorted(mappings.keys())
 
-        if isinstance(mappings['startingFrom'], list):
-            if not isinstance(mappings['mergeWith'], list):
+        # handle legacy mapping, but only if there are exactly 2 elements
+        # because names can be reused, though that'll cause havoc with
+        if 'startingFrom' in mappings and 'mergeWith' in mappings:
+            if len(mappings) == 2:
+                keys = sorted(mappings.keys(), reverse=True)
+
+        if isinstance(mappings[keys[0]], list):
+            if not all([isinstance(x, list) for x in mappings.values()]):
                 raise ValueError("Attempt to merge list with non-list")
-            merge_node = MergeLists(mappings['startingFrom'],
-                                    mappings['mergeWith'])
-        elif isinstance(mappings['startingFrom'], dict):
-            if not isinstance(mappings['mergeWith'], dict):
+            merge_node = MergeLists([mappings[x] for x in keys])
+        elif isinstance(mappings[keys[0]], dict):
+            if not all([isinstance(x, dict) for x in mappings.values()]):
                 raise ValueError(
                     "Attempt to merge dictionary with non-dictionary")
-            merge_node = MergeDictionaries(mappings['startingFrom'],
-                                           mappings['mergeWith'])
+            merge_node = MergeDictionaries([mappings[x] for x in keys])
         else:
             raise ValueError("Attempt to merge scalars")
 
         self.merge_nodes.append(merge_node)
-
         return merge_node.target
 
     def param(self, node):
@@ -253,7 +248,9 @@ class YamlStratusLoader(yaml.Loader):
         Extension for parameterizing
         """
         param_parts = self.construct_scalar(node).split(' ', 1)
-        if not param_parts[0] in self.params_dict:
+        # If the parameter isn't specified on the cmd line, return a default if
+        # one is provided
+        if param_parts[0] not in self.params_dict:
             if len(param_parts) > 1:
                 return param_parts[1].strip('"')
             else:
@@ -317,12 +314,12 @@ class YamlStratusLoader(yaml.Loader):
                     elif isinstance(src[inner_key], list) and isinstance(
                             override[inner_key], list):
                         merged_children = self.merge_objects(
-                            MergeLists(src[inner_key], override[inner_key]))
+                            MergeLists([src[inner_key], override[inner_key]]))
                     elif isinstance(src[inner_key], dict) and isinstance(
                             override[inner_key], dict):
                         merged_children = self.merge_objects(
-                            MergeDictionaries(src[inner_key],
-                                              override[inner_key]))
+                            MergeDictionaries([src[inner_key],
+                                               override[inner_key]]))
                     else:
                         merged_children = override[inner_key]
                 else:
@@ -341,24 +338,26 @@ class YamlStratusLoader(yaml.Loader):
         return merged
 
     def merge_objects(self, merge_node):
-        """Recursively merge two YAML nodes"""
+        """Recursively merge two YAML nodes
+        Acts on objects of type MergeLists and MergeDictionaries"""
         if merge_node.is_merged:
             return merge_node.target
 
         merge_node.mark_merged()
 
-        if self.removed_node == merge_node.merge_with:
-            # Indicates a YAML node being removed
-            return None
-
         # Check for merging of two YAML lists
         if isinstance(merge_node, MergeLists):
-            merge_node.target.extend(self.merge_lists(merge_node.starting_from,
-                                                      merge_node.merge_with))
+            merge_temp = merge_node.lists[0]
+            # merge list just appends two lists unless one of them is being deleted
+            # passing in None as the first element just appends the second list
+            for i in range(1, len(merge_node.lists)):
+                merge_temp = self.merge_lists(merge_temp, merge_node.lists[i])
+            merge_node.target.extend(merge_temp)
             return merge_node.target
         elif isinstance(merge_node, MergeDictionaries):
-            merged = self.merge_dictionaries(merge_node.starting_from,
-                                             merge_node.merge_with)
+            merged = merge_node.dicts[0]
+            for i in range(1, len(merge_node.dicts)):
+                merged = self.merge_dictionaries(merged, merge_node.dicts[i])
             for key in merged:
                 merge_node.target[key] = merged[key]
             return merge_node.target

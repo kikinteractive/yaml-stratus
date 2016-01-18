@@ -183,7 +183,7 @@ def test_include_base64_file_not_found():
         except IOError:
             pass
 
-def test_merge_syntax_errors():
+def test_merge_single_key_error():
     yaml_str = """
                 ---
                 main:
@@ -197,6 +197,16 @@ def test_merge_syntax_errors():
                         mergeWith:
                             - value1
                             - value2
+                """
+    for yaml in yaml_str.split('---')[1:]:
+        try:
+            yamlstratus.load_as_json(yaml, include_dirs=["test"])
+            assert False
+        except KeyError:
+            pass
+
+def test_merge_new_keys():
+    yaml_str = """
                 ---
                 main:
                     top: !merge
@@ -222,7 +232,7 @@ def test_merge_syntax_errors():
     for yaml in yaml_str.split('---')[1:]:
         try:
             yamlstratus.load_as_json(yaml, include_dirs=["test"])
-            assert False
+            assert True
         except KeyError:
             pass
 
@@ -283,3 +293,20 @@ def test_merge_type_mismatch_errors():
             assert False
         except ValueError:
             pass
+
+def test_merge_remove_list_errors():
+    yaml_str = """
+                ---
+                main: !merge
+                    startingFrom:
+                        - value1
+                        - value2
+                    mergeWith: !remove
+                """
+    for yaml in yaml_str.split('---')[1:]:
+        try:
+            yamlstratus.load_as_json(yaml, include_dirs=["test"])
+            assert False
+        except ValueError:
+            pass
+

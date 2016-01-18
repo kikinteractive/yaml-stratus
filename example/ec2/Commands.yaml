@@ -1,0 +1,13 @@
+commands:
+    01_set_mysql_root_password:
+        command: !jtext |
+              mysqladmin -u root password '!{Ref: DBRootPassword!}'
+
+        test: !jtext |
+              (mysql -u root --password='!{Ref: DBRootPassword!}' >/dev/null 2>&1 </dev/null); (( $? != 0 ))
+
+    02_create_database:
+        command: !jtext |
+              mysql -u root --password='!{Ref: DBRootPassword!}' < /tmp/setup.mysql
+        test: !jtext |
+              $(mysql !{Ref: DBName!} -u !{Ref: DBUsername!} --password='!{Ref: DBPassword!}' >/dev/null 2>&1 </dev/null); (( $? != 0 ))
